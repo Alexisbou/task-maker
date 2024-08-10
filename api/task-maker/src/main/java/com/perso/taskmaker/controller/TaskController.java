@@ -1,22 +1,23 @@
 package com.perso.taskmaker.controller;
 
 import com.perso.taskmaker.model.Task;
-import com.perso.taskmaker.service.TaskService;
+import com.perso.taskmaker.service.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 
 @RestController
-@RequestMapping("api/task")
+@RequestMapping("api/tasks")
 public class TaskController {
 
+    private final ITaskService taskService;
+
     @Autowired
-    private TaskService taskService;
+    public TaskController(ITaskService taskService) {
+        this.taskService = taskService;
+    }
 
     @GetMapping("/")
     public List<Task> getAllTasks() {
@@ -24,17 +25,13 @@ public class TaskController {
     }
 
     @GetMapping("/{id}")
-    public Task getTask(@PathVariable int id) {
-        return findTaskById(id);
+    public Task getTask(@PathVariable Long id) {
+        return taskService.findById(id);
     }
 
-
-
-
-    private Task findTaskById(int id) {
-        Task task = new Task();
-        task.setId(123);
-        task.setDescription("La description de la tâche");
-        return task;
+    @PostMapping("/")
+    public Task createTask(@RequestBody String description) {
+        return taskService.createTask(description);
     }
+
 }

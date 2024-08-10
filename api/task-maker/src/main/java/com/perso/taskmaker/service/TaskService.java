@@ -1,25 +1,48 @@
 package com.perso.taskmaker.service;
 
 import com.perso.taskmaker.model.Task;
+import com.perso.taskmaker.repository.TaskRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class TaskService implements ITaskService{
+
+    TaskRepository taskRepository;
+    @Autowired
+    public TaskService(TaskRepository taskRepository) {
+        this.taskRepository = taskRepository;
+    }
+
     @Override
     public List<Task> getAllTasks() {
-        Task t1 = new Task();
-        t1.setId(1);
-        t1.setDescription("premier desc");
-        Task t2 = new Task();
-        t2.setId(2);
-        t2.setDescription("deuxieme desc");
-        Task t3 = new Task();
-        t3.setId(3);
-        t3.setDescription("troisieme desc");
 
-        return List.of(t1,t2,t3);
+        return taskRepository.findAll();
+
+    }
+
+    @Override
+    public Task findById(Long id) {
+        Optional<Task> task = taskRepository.findById(id);
+
+        if (task.isEmpty()) {
+            throw new RuntimeException("Task not found");
+        }
+        return task.get();
+    }
+
+    @Override
+    public Task createTask(String description) {
+        Task task = new Task();
+
+        task.setDescription(description);
+
+        taskRepository.save(task);
+
+        return task;
     }
 }
