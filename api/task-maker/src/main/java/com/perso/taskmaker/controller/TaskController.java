@@ -1,8 +1,10 @@
 package com.perso.taskmaker.controller;
 
+import com.perso.taskmaker.dto.CreateTaskRequest;
 import com.perso.taskmaker.model.Task;
 import com.perso.taskmaker.service.ITaskService;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -19,7 +21,7 @@ public class TaskController {
         this.taskService = taskService;
     }
 
-    @GetMapping("/")
+    @GetMapping()
     public List<Task> getAllTasks() {
         return taskService.getAllTasks();
     }
@@ -29,9 +31,14 @@ public class TaskController {
         return taskService.findById(id);
     }
 
-    @PostMapping("/")
-    public Task createTask(@RequestBody String description) {
-        return taskService.createTask(description);
+    @PostMapping()
+    public Task createTask(@RequestBody CreateTaskRequest createTaskRequest) {
+        return taskService.createTask(createTaskRequest);
     }
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deleteTask(@PathVariable Long id) {
+        taskService.deleteTaskById(id);
+        return ResponseEntity.noContent().build();  // 204 No Content
+    }
 }

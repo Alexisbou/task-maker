@@ -1,5 +1,6 @@
 package com.perso.taskmaker.service;
 
+import com.perso.taskmaker.dto.CreateTaskRequest;
 import com.perso.taskmaker.model.Task;
 
 import java.util.List;
@@ -11,5 +12,7 @@ public interface ITaskService {
 
     Task findById(Long id);
 
-    Task createTask(String description);
+    Task createTask(CreateTaskRequest description);
+
+    void deleteTaskById(Long id);
 }
